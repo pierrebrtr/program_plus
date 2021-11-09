@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Pierre Bertier">
+    <meta name="generator" content="Pierre 0.1">
+    <title>Program+ | Auto Moto</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/jumbotron/">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap core CSS -->
+<link href="./assets/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="./assets/dist/css/main.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" rel="stylesheet">
+
+
+  </head>
+  <body>
+    
+<main>
+  <div class="container py-4">
+    <header class="pb-3 mb-4 border-bottom">
+      <div href="/" class="  text-dark text-decoration-none">
+        <span   class="fs-4 float-left"><div><a class="header" href="index.html"><b>Program+</b></a> Auto Moto</span>
+        <span class="fs-4 float-right" ><button type="button" class="btn btn-primary refreshBtn" style="left:81%; position: absolute;"><i class="fa-solid fa-arrows-rotate"></i></button></span>
+        
+      </div>
+    </header>
+    
+    <div class="p-5 mb-4 bg-light rounded-3 am" id="tableAM">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Auto Moto</h1>
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th scope="col">Date</th>
+              <th scope="col">Type</th>
+              <th scope="col">Journée</th>
+              <th scope="col">Heure</th>
+              <th scope="col">Circuit</th>
+              <th scope="col">Diffuseur</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            <!-- template --> 
+           
+            <tr style="display: none" data-type="template">
+              <td><button type="button" class="btn btn-primary copyBtnAutoMoto"><i class="far fa-copy"></i></button></td>
+              <th scope="row" class="MatchDate">Vendredi 15 Octobre</th>
+              <td class="MatchType"></td>
+              <td  class="MatchDayCompetition"></td>
+              <td  class="MatchHour">15h00</td>
+              <td  class="MatchTeams">Clermont - Laval</td>
+              <td class="MatchDiffusor"><img style="width: 40px;" class="imgDiffusor" /></td>
+              <td style="display: none" class="MatchDiffusorName"></td>
+              <td style="display: none" class="MatchUrlDiffusion"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <footer class="pt-3 mt-4 text-muted border-top">
+      &copy; 2021 - Pierre Bertier
+    </footer>
+  </div>
+</main>
+
+
+    <script>
+
+      var today = new Date();
+
+      function formatDate(date, format) {
+          const map = {
+              mm: date.getMonth() + 1,
+              dd: date.getDate(),
+              yy: date.getFullYear().toString().slice(-2),
+              yyyy: date.getFullYear()
+          }
+
+          return format.replace(/mm|dd|yy|yyy/gi, matched => map[matched])
+      }
+
+      function addUpHour(time, nb) {    
+        let timeInt = parseInt(time);
+        let minutes = time.substring(3,5);
+        timeInt += nb;
+        return `${timeInt}:${minutes}`;
+      } 
+
+      function initMonth(date) {
+        value = date.split("/");
+        var d = new Date(value[2], parseInt(value[1], 10)-1, value[0]);
+        d.setDate(1)
+        console.log("Formatted date" + d)
+        return formatDate(d, 'dd/mm/yy')
+      }
+
+      $(document).on('click','.refreshBtn', function(event) {
+        window.location.href = window.location.pathname + window.location.search + window.location.hash;
+      });
+
+     $(document).on('click','.copyBtnAutoMoto', function(event) {
+
+        var textToCopy = initMonth($(this).closest('tr').children(".MatchDate").text()) + "	" + $(this).closest('tr').children(".MatchDate").text() + "	" + "1" + "	" + $(this).closest('tr').children(".MatchType").text() + "	" + "Championnat du monde" + "	" + $(this).closest('tr').children(".MatchDayCompetition").text() + "	" + $(this).closest('tr').children(".MatchTeams").text() + "	" + $(this).closest('tr').children(".MatchHour").text() + "	" + addUpHour($(this).closest('tr').children(".MatchHour").text(), 2) + "	" + $(this).closest('tr').children(".MatchDiffusorName").text() + "	" + formatDate(today, 'dd/mm/yy') + "	" + $(this).closest('tr').children(".MatchUrlDiffusion").text();
+        console.log(textToCopy)
+        navigator.clipboard.writeText(textToCopy).then(function() {
+          console.log('Async: Copying to clipboard was successful!');
+        }, function(err) {
+          console.error('Async: Could not copy text: ', err);
+        });
+      });
+
+      var tbodyRef = document.getElementById('tableAM').getElementsByTagName('tbody')[0];
+
+      $(document).ready(function() {
+        $.ajax({
+          url: "http://127.0.0.1:8000/automoto",
+          type: "GET",
+          success: function(result) {
+            for (const element of result["AutoMoto"]) {
+              var docFrag = document.createDocumentFragment();
+              var tempNode = document.querySelector("tr[data-type='template']").cloneNode(true); //true for deep clone
+              tempNode.querySelector("td.MatchHour").textContent = element["hour"];
+              tempNode.querySelector("th.MatchDate").textContent = element["date"];
+              tempNode.querySelector("td.MatchTeams").textContent = element["teams"];
+              tempNode.querySelector("td.MatchDiffusorName").textContent = element["diffusorName"];
+              tempNode.querySelector("td.MatchUrlDiffusion").textContent = element["urlPage"];
+              tempNode.querySelector("td.MatchDayCompetition").textContent = element["journee"];
+              tempNode.querySelector("td.MatchDiffusor").querySelector("img.imgDiffusor").src = element["diffusor"];
+
+              tempNode.querySelector("td.MatchType").textContent = element["type"];
+
+              tempNode.style.display = "table-row";
+              tbodyRef.appendChild(tempNode);
+            }
+          },
+          error: function(error) {
+            console.log(error);
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
