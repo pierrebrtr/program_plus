@@ -16,10 +16,6 @@
 <link href="./assets/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="./assets/dist/css/main.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" rel="stylesheet">
-
-  
-
-    
   </head>
   <body>
     
@@ -176,7 +172,7 @@
 
       $(document).ready(function() {
         $.ajax({
-          url: "http://127.0.0.1:8000/rugby",
+          url: "http://193.168.146.76:8000/rugby",
           type: "GET",
           success: function(result) {
             for (const element of result["Top14"]) {
