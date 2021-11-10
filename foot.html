@@ -316,7 +316,7 @@ navigator.clipboard.writeText(textToCopy).then(function() {
               tempNode.querySelector("td.MatchDayCompetition").textContent = element["journee"];
               tempNode.querySelector("td.MatchDiffusor").querySelector("img.imgDiffusor").src = element["diffusor"];
               tempNode.style.display = "table-row";
-              tableChampionsLeague.appendChild(tempNode);
+              tbodyRefCL.appendChild(tempNode);
             }
           },
           error: function(error) {
