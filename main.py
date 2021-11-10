@@ -274,4 +274,5 @@ async def root():
     ligue1 = getFootballCompetition("https://www.agendatv-foot.com/match-programme-tv-ligue+1")
     premiereLeague = getFootballCompetition("https://www.agendatv-foot.com/match-programme-tv-english+premier+league")
     europaLeague = getFootballCompetition("https://www.agendatv-foot.com/match-programme-tv-europa+league")
-    return {"Ligue 1": ligue1, "EPL": premiereLeague, "EuropaLeague": europaLeague}
+    championsLeague = getFootballCompetition("https://www.agendatv-foot.com/match-programme-tv-champions+league")
+    return {"Ligue 1": ligue1, "EPL": premiereLeague, "EuropaLeague": europaLeague, "ChampionsLeague": championsLeague}

@@ -30,7 +30,7 @@
     </header>
 
     <div class="p-2 mb-4 bg-light rounded-3 text-center scrollMenu">
-     <a href="#tableLigue1">Ligue 1</a>><a href="#tableEPL">EPL</a>><a href="#tableEuropaLeague">Europa League</a>
+     <a href="#tableLigue1">Ligue 1</a>><a href="#tableEPL">EPL</a>><a href="#tableEuropaLeague">Europa League</a>><a href="#tableChampionsLeague">Champions League</a>
     </div>
     
     <div class="p-5 mb-4 bg-light rounded-3 ligue1" id="tableLigue1">
@@ -141,6 +141,42 @@
         </table>
       </div>
     </div>
+
+    <div class="p-5 mb-4 bg-light rounded-3 cL" id="tableChampionsLeague">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Champions League</h1>
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th scope="col">Date</th>
+              <th scope="col">Journée</th>
+              <th scope="col">Heure</th>
+              <th scope="col">Match</th>
+              <th scope="col">Competition</th>
+              <th scope="col">Diffuseur</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            <!-- template --> 
+           
+            <tr style="display: none" data-type="templateCL">
+              <td><button type="button" class="btn btn-primary copyBtnFootballCL"><i class="far fa-copy"></i></button></td>
+              <th scope="row" class="MatchDate">Vendredi 15 Octobre</th>
+              <td  class="MatchDayCompetition"></td>
+              <td  class="MatchHour">15h00</td>
+              <td  class="MatchTeams">Clermont - Laval</td>
+              <td  class="MatchCompetition">Champions League</td>
+              <td class="MatchDiffusor"><img style="width: 44px;" class="imgDiffusor" /></td>
+              <td style="display: none" class="MatchDiffusorName"></td>
+              <td style="display: none" class="MatchUrlDiffusion"></td>
+             
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
     
     <footer class="pt-3 mt-4 text-muted border-top">
       &copy; 2021 - Pierre Bertier
@@ -205,9 +241,21 @@
       });
       });
 
+      $(document).on('click','.copyBtnFootballCL', function(event) {
+
+var textToCopy = initMonth($(this).closest('tr').children(".MatchDate").text()) + "	" + $(this).closest('tr').children(".MatchDate").text() + "	" + "1" + "	" + "Football" + "	" + "Champions League" + "	" + $(this).closest('tr').children(".MatchDayCompetition").text() + "	" + $(this).closest('tr').children(".MatchTeams").text() + "	" + $(this).closest('tr').children(".MatchHour").text() + "	" + addUpHour($(this).closest('tr').children(".MatchHour").text(), 2) + "	" + $(this).closest('tr').children(".MatchDiffusorName").text() + "	" + formatDate(today, 'dd/mm/yy') + "	" + $(this).closest('tr').children(".MatchUrlDiffusion").text();
+console.log(textToCopy)
+navigator.clipboard.writeText(textToCopy).then(function() {
+  console.log('Async: Copying to clipboard was successful!');
+}, function(err) {
+  console.error('Async: Could not copy text: ', err);
+});
+});
+
       var tbodyRef = document.getElementById('tableEPL').getElementsByTagName('tbody')[0];
       var tbodyRefLigue1 = document.getElementById('tableLigue1').getElementsByTagName('tbody')[0];
       var tbodyRefEL = document.getElementById('tableEuropaLeague').getElementsByTagName('tbody')[0];
+      var tbodyRefCL = document.getElementById('tableChampionsLeague').getElementsByTagName('tbody')[0];
 
       $(document).ready(function() {
         $.ajax({
@@ -255,6 +303,20 @@
               tempNode.querySelector("td.MatchDiffusor").querySelector("img.imgDiffusor").src = element["diffusor"];
               tempNode.style.display = "table-row";
               tbodyRefEL.appendChild(tempNode);
+            }
+
+            for (const element of result["ChampionsLeague"]) {
+              var docFrag = document.createDocumentFragment();
+              var tempNode = document.querySelector("tr[data-type='templateCL']").cloneNode(true); //true for deep clone
+              tempNode.querySelector("td.MatchHour").textContent = element["hour"];
+              tempNode.querySelector("th.MatchDate").textContent = element["date"];
+              tempNode.querySelector("td.MatchTeams").textContent = element["teams"];
+              tempNode.querySelector("td.MatchDiffusorName").textContent = element["diffusorName"];
+              tempNode.querySelector("td.MatchUrlDiffusion").textContent = element["urlPage"];
+              tempNode.querySelector("td.MatchDayCompetition").textContent = element["journee"];
+              tempNode.querySelector("td.MatchDiffusor").querySelector("img.imgDiffusor").src = element["diffusor"];
+              tempNode.style.display = "table-row";
+              tableChampionsLeague.appendChild(tempNode);
             }
           },
           error: function(error) {
