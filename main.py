@@ -175,24 +175,25 @@ def getFootballCompetition(urlpage):
         horaire = infosMatch[0].find_all("div", {"class": "mb-1"})
         imgList = []
         for img in div.find_all("img", alt=True):
-
             if "icones_tv" in img["src"]:
-                imgList.append(img)
+                if "canal" in img["src"] or urlpage == "https://www.agendatv-foot.com/match-programme-tv-english+premier+league":
+                    imgList.append(img)
+                    print(img)
 
         dateMatch = getAgendaTvDate(div)
-
-        match = {
-            "date": dateMatch,
-            "hour": horaire[0].text.strip(),
-            "teams": texts[0].text.strip() + " - " + texts[1].text.strip(),
-            "diffusor": imgList[-1]["src"],
-            "diffusorName": formatDiffusorName(imgList[-1]["alt"]),
-            "urlPage": "https://www.agendatv-foot.com"
-            + infosMatch[0].find_all("a", href=True)[0]["href"],
-            "journee": "",
-        }
-        if match["diffusorName"] != "Except":
-            listMatch.append(match)
+        if len(imgList) > 0:
+            match = {
+                "date": dateMatch,
+                "hour": horaire[0].text.strip(),
+                "teams": texts[0].text.strip() + " - " + texts[1].text.strip(),
+                "diffusor": imgList[-1]["src"],
+                "diffusorName": formatDiffusorName(imgList[-1]["alt"]),
+                "urlPage": "https://www.agendatv-foot.com"
+                + infosMatch[0].find_all("a", href=True)[0]["href"],
+                "journee": "",
+            }
+            if match["diffusorName"] != "Except" or urlpage == "https://www.agendatv-foot.com/match-programme-tv-english+premier+league":
+                listMatch.append(match)
 
     return listMatch
 
