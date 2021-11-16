@@ -219,6 +219,17 @@
         window.location.href = window.location.pathname + window.location.search + window.location.hash;
       });
 
+      $(document).on('click','.copyBtnFootballLigue1', function(event) {
+
+      var textToCopy = initMonth($(this).closest('tr').children(".MatchDate").text()) + "	" + $(this).closest('tr').children(".MatchDate").text() + "	" + "1" + "	" + "Football" + "	" + "Ligue 1" + "	" + $(this).closest('tr').children(".MatchDayCompetition").text() + "	" + $(this).closest('tr').children(".MatchTeams").text() + "	" + $(this).closest('tr').children(".MatchHour").text() + "	" + addUpHour($(this).closest('tr').children(".MatchHour").text(), 2) + "	" + $(this).closest('tr').children(".MatchDiffusorName").text() + "	" + formatDate(today, 'dd/mm/yy') + "	" + $(this).closest('tr').children(".MatchUrlDiffusion").text();
+        console.log(textToCopy)
+        navigator.clipboard.writeText(textToCopy).then(function() {
+          console.log('Async: Copying to clipboard was successful!');
+        }, function(err) {
+          console.error('Async: Could not copy text: ', err);
+        });
+      });
+
      $(document).on('click','.copyBtnFootballEPL', function(event) {
 
         var textToCopy = initMonth($(this).closest('tr').children(".MatchDate").text()) + "	" + $(this).closest('tr').children(".MatchDate").text() + "	" + "1" + "	" + "Football" + "	" + "Premier League" + "	" + $(this).closest('tr').children(".MatchDayCompetition").text() + "	" + $(this).closest('tr').children(".MatchTeams").text() + "	" + $(this).closest('tr').children(".MatchHour").text() + "	" + addUpHour($(this).closest('tr').children(".MatchHour").text(), 2) + "	" + $(this).closest('tr').children(".MatchDiffusorName").text() + "	" + formatDate(today, 'dd/mm/yy') + "	" + $(this).closest('tr').children(".MatchUrlDiffusion").text();
